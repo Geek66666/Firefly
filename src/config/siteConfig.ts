@@ -21,10 +21,10 @@ export const siteConfig: SiteConfig = {
 
 	// 站点关键词
 	keywords: [
-		"Blog",
-		"Fuwari",
-		"Astro",
-		"ACGN",
+		"ACM",
+		"CTF",
+		"SCU",
+		"Software Engineering",
 		"博客",
 		"技术博客",
 	],
