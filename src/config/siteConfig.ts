@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
 	title: "CodeAtlantis的小小博客",
 
 	// 站点副标题
-	subtitle: "CodeAtlantis的小小博客",
+	subtitle: "无限进步",
 
 	// 站点 URL
 	site_url: "https://cablog.cacode.qzz.io/",
