@@ -2,7 +2,7 @@
 title: SCUCTF2025 WriteUp For Crypto
 published: 2025-12-22
 description: 四川大学网络安全新生赛题解
-image: ./cover1.webp
+image: ./covers/cover1.webp
 tags: [网络安全, 密码学]
 category: 网络安全
 draft: false

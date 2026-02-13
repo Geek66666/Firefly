@@ -2,7 +2,7 @@
 title: SCUCTF2025 WriteUp For Web
 published: 2025-12-22
 description: 四川大学网络安全新生赛题解
-image: ./cover4.webp
+image: ./covers/cover4.webp
 tags: [网络安全, Web]
 category: 网络安全
 draft: false

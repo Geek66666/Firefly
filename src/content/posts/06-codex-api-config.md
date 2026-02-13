@@ -2,7 +2,7 @@
 title: VSCODE中配置Codex中转api
 published: 2026-02-12
 description: Codex的配置教程
-image: ./cover6.webp
+image: ./covers/cover6.webp
 tags: [软件开发, 人工智能, Codex]
 category: 软件开发
 draft: false
