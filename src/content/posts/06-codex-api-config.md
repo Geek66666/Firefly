@@ -2,7 +2,7 @@
 title: VSCODE中配置Codex中转api
 published: 2026-02-12
 description: Codex的配置教程
-image: https://api.yppp.net/api.php
+image: ./cover6.webp
 tags: [软件开发, 人工智能, Codex]
 category: 软件开发
 draft: false
@@ -60,5 +60,6 @@ requires_openai_auth = true             #是否需要openai认证(建议保持�
 
 
 需要购买codex的可以去[这里](https://foxcode.rjj.cc/auth/register?aff=EPSZEL)(带aff)，也可以自己搭建sub2api等项目使用（free可用codex，因此注册机启动~~！）
+
 
 
