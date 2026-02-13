@@ -11,7 +11,7 @@ description: "与优秀的朋友们一起成长"
 
 ```yaml
 站点名称: CodeAtlantis的Blog
-站点描述: 飞萤之火自无梦的长夜亮起，绽放在终竟的明天。
+站点描述: CodeAtlantis的技术小站和日常分享，来自一名很菜很菜的SCUer
 站点链接: https://blog.cacode.qzz.io/
 
 ```
