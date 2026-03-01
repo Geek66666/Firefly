@@ -1,6 +1,6 @@
 ---
 title: Nomad对接Beszel
-published: 2026-02-24
+published: 2026-03-01
 description: Nomad对接Beszel，并监控GPU实现细粒度的监控
 image: ./covers/cover8.webp
 tags: [软件开发, BaZhen, Beszel, Nomad]
