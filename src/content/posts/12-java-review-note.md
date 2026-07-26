@@ -5,7 +5,7 @@ description: 大学java面向对象程序设计课程的复习笔记
 image: ./covers/cover11.webp
 tags: [复习笔记, Java, 软件开发]
 category: 复习笔记
-draft: true
+draft: false
 ---
 
 # Java复习笔记
@@ -109,7 +109,8 @@ while(it.hasNext()){
     }
 }
 ```
-#### 文件读入
+#### (8) 文件读入
+**重点：readline**
 ```java
 //文件读入
 import java.io.*;
@@ -133,6 +134,10 @@ public class ReadFile {
     }
 }
 ```
+### 3.UML题目做题策略
+- 1.根据题目找出有几个类，类里面分别有哪些变量，变量的属性应该是什么？
+- 2.根据题目描述找出每个类之间的关系，继承、接口等（注意分析题目中暗示的继承关系）
+- 3.判断每个类中有哪些东西是super，哪些是this，哪些可以直接复用
 
 ## 二、单选题知识点整理
 
@@ -185,7 +190,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - 数组的声明+初始化：
     `int[] arr = new int[3];` 
     `int[] arr = {1, 2, 3};` 
-    `int[] arr = new int[3]{1, 2, 3};`
+    `int[] arr = new int[]{1, 2, 3};`⭐
     `int[][] matrix = new int[3][3];`
     ```java
     // 直接赋值，编译器自动计算行列
@@ -281,16 +286,26 @@ for(String i : a) // 迭代Arraylist中的元素
     - 一个类在整个程序中，有且仅有一个实例，并提供全局唯一访问入口。
     - 私有构造方法：禁止外部 `new`
     ```java
-    public class SingletonPatternDemo{
-        public static void main(String[] args){
-            //不合法的构造函数
-            //编译时错误：构造函数 SingleObject() 是不可见的
-            //SingleObject object = new SingleObject();
-            //获取唯一可用的对象
-            SingleObject object = SingleObject.getInstance();
-            //显示消息
-            object.showMessage();
-        }
+    //懒汉式
+    public class Singleton {  
+        private static Singleton instance;  
+        private Singleton (){}  
+        public static Singleton getInstance() {  
+            if (instance == null) {  
+                instance = new Singleton();  
+            }  
+            return instance;  
+        }  
+    }
+    ```
+    ```java
+    //饿汉式
+    public class Singleton {  
+        private static Singleton instance = new Singleton();  
+        private Singleton (){}  
+        public static Singleton getInstance() {  
+        return instance;  
+        }  
     }
     ```
 - 观察者模式
@@ -300,6 +315,51 @@ for(String i : a) // 迭代Arraylist中的元素
         - 具体主题：状态改变，触发通知
         - 抽象观察者：定义接收通知的更新接口
         - 具体观察者：收到通知后执行具体逻辑
+    ```java
+    //Subject.java
+    public class Subject {
+        private List<Observer> observers = new ArrayList<Observer>();
+        private int state;
+        public int getState(){
+            return state;
+        }
+        public void setState(int state) {
+            this.state = state;
+            notifyAllObservers();
+        }
+        public void attach(Observer observer){
+            observers.add(observer);      
+        }
+        public void notifyAllObservers(){
+            for (Observer observer : observers) {
+                observer.update();
+            }
+        }  
+    }
+    ```
+    ```java
+    // Observer.java
+    public abstract class Observer {
+        protected Subject subject;
+        public abstract void update();
+    }
+    ```
+    ```java
+    // BinaryObserver.java 实体观察者类
+    public class BinaryObserver extends Observer{
+    
+        public BinaryObserver(Subject subject){
+            this.subject = subject;
+            this.subject.attach(this);
+        }
+        
+        @Override
+        public void update() {
+            System.out.println( "Binary String: " + Integer.toBinaryString( subject.getState() ) ); 
+        }
+    }
+    ```
+    每次主函数中`subject.setState();`时，`subject`自动调用`notifyAllObservers();`通知所有attach过的observer，让其更新状态
 
 - 策略模式
     - 定义一系列算法，把每个算法封装成独立类，算法之间可自由切换
@@ -309,23 +369,144 @@ for(String i : a) // 迭代Arraylist中的元素
         - 抽象策略：接口 / 抽象类，定义算法统一规范
         - 具体策略：实现不同算法
         - 环境上下文：持有策略引用，对外提供调用入口
+    ```java
+    // Strategy.java
+    public interface Strategy {
+        public int doOperation(int num1, int num2);
+    }
+
+    // Operation1.java
+    public class Operation1 implements Strategy{
+        @Override
+        public int doOperation(int num1, int num2) {
+            return num1 + num2;
+        }
+    }
+
+    // Context.java
+    public class Context {
+        private Strategy strategy;
+        public Context(Strategy strategy){
+            this.strategy = strategy;
+        }
+        public int executeStrategy(int num1, int num2){
+            return strategy.doOperation(num1, num2);
+        }
+    }
+
+    // MainClass.java
+    public class MainClass {
+        public static void main(String[] args) {
+            Context context = new Context(new OperationAdd());
+        }
+    }
+    ```
 
 - 装饰器模式
-    - 动态地给一个对象添加额外的职责，同时  不改变其结构
+    - 动态地给一个对象添加额外的职责，同时不改变其结构
     - 提供了一种灵活的替代继承方式来扩展功能
     - 核心角色
         - 抽象构件：顶层抽象接口/类，定义核心行为
         - 具体构件：原始基础对象（被装饰的主体）
         - 抽象装饰器：继承/实现抽象构件，持有抽象构件引用
         - 具体装饰器：在原有功能上叠加新逻辑
+    ```java
+    public interface Shape {
+        void draw();
+    }
+    public class Rectangle implements Shape {
+        @Override
+        public void draw() {
+            System.out.println("Shape: Rectangle");
+        }
+    }
+    public class Circle implements Shape {
+        @Override
+        public void draw() {
+            System.out.println("Shape: Circle");
+        }
+    }
+    public abstract class ShapeDecorator implements Shape {
+        protected Shape decoratedShape;        
+        public ShapeDecorator(Shape decoratedShape){
+            this.decoratedShape = decoratedShape;
+        }
+        public void draw(){
+            decoratedShape.draw();
+        }  
+    }
+    public class RedShapeDecorator extends ShapeDecorator {
+        public RedShapeDecorator(Shape decoratedShape) {
+            super(decoratedShape);     
+        }
+        @Override
+        public void draw() {
+            decoratedShape.draw();         
+            setRedBorder(decoratedShape);
+        }
+        private void setRedBorder(Shape decoratedShape){
+            System.out.println("Border Color: Red");
+        }
+    }
+    public class DecoratorPatternDemo {
+        public static void main(String[] args) {
+            Shape circle = new Circle();
+            ShapeDecorator redCircle = new RedShapeDecorator(new Circle());
+            System.out.println("Circle with normal border");
+            circle.draw();
+            System.out.println("\nCircle of red border");
+            redCircle.draw();
+        }
+    }
+    ```
 
 - 组合模式
     - 把单个对象和由多个对象组成的 “整体容器”，当成一模一样的东西来用
+    - **单个节点、一组节点，调用方式完全一样**
     - 将对象组合成树形结构以表示"部分-整体"的层次结构，组合模式使得用户对单个对象和组合对象的使用具有一致性
     - 核心角色：
         - Component接口：定义了所有对象必须实现的操作
         - Leaf类：实现Component接口，代表树中的叶子节点
         - Composite类：也实现Component接口，并包含其他Component对象的集合
+    ```java
+    //抽象构件（统一接口）
+    public abstract class FileNode {
+        public abstract void show();
+    }
+
+    // 叶子节点（文件，无子节点）
+    public class File extends FileNode {
+        private String name;
+        public File(String name) { this.name = name; }
+        @Override
+        public void show() {
+            System.out.println("文件：" + name);
+        }
+    }
+
+    // 容器节点（文件夹，可存子节点）
+    import java.util.ArrayList;
+    import java.util.List;
+    public class Folder extends FileNode {
+        private String name;
+        private List<FileNode> childs = new ArrayList<>();
+        public Folder(String name) { this.name = name; }
+
+        // 添加子节点（文件/文件夹）⭐⭐⭐
+        public void add(FileNode node) {
+            childs.add(node);
+        }
+
+        @Override
+        public void show() {
+            System.out.println("文件夹：" + name);
+            // 遍历所有子节点
+            for (FileNode node : childs) {
+                node.show();
+            }
+        }
+    }
+    ```
 
 
 - **策略模式：换算法/换行为（做加法、减法、乘法，直接换一套逻辑）**
@@ -373,6 +554,7 @@ for(String i : a) // 迭代Arraylist中的元素
 - 运行时异常（UncheckedException）编译器不强制处理
 - RuntimeException（非检查异常）不必显式捕获
 - 同一异常对象可以被 catch 后再 throw，可以多次抛出
+- 异常没有被处理，放在`callstack`（调用栈）中
 - `try-catch-finally` 异常处理 
     ```java
     // 标准格式
@@ -400,13 +582,13 @@ for(String i : a) // 迭代Arraylist中的元素
     - 无异常：`try` → `finally`
     - 有异常，被 `catch` 捕获：`try`(中断) → `catch` → `finally`
     - 有异常，无对应 `catch`：`try`(中断) → `finally` → 异常向外抛出
-```
-Throwable (父类)
-├── Error (错误，不可处理)
-└── Exception (异常，可处理)
-    ├── RuntimeException (运行时异常，非受检)
-    └── UncheckedException (编译时异常，受检)
-```
+    ```
+    Throwable (父类)
+    ├── Error (错误，不可处理)
+    └── Exception (异常，可处理)
+        ├── RuntimeException (运行时异常，非受检)
+        └── UncheckedException (编译时异常，受检)
+    ```
 
 ### 13.内部类
 - 写在另一个类内部的类，外部包裹的类叫外部类
@@ -506,6 +688,7 @@ Throwable (父类)
     - 读文件：文件不存在 → 抛出 `FileNotFoundException`（受检异常，必须捕获 / 声明）
     - 写文件：文件不存在 → 自动创建，不报错
     - 所有流操作异常父类：`IOException`
+- Reader读入字符 Stream读入字节
 ### 小知识点
 - 类型转换
     - 自动转换（隐式）：小范围到大范围
@@ -550,7 +733,7 @@ Throwable (父类)
 - `equals(Object obj)`用来测试两个字符串是否相等
 - `public static void main` 中修饰符的顺序可以改变
 - `FlowLayout` 是 `Panel` 和 `Applet` 的默认布局管理器（从左到右，超出则换行）。`JFrame/Frame` 默认是 `BorderLayout`；`JPanel` 默认也是 `FlowLayout`
-- java.awt.* 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
+- `java.awt.*` 是 Java AWT 图形界面的基础包，含 Frame、Panel、Button、Label 等核心组件
 
 ## 三、易错题&难题
 ![](image-36.png)
@@ -558,7 +741,343 @@ Throwable (父类)
 
 ## 四、历年真题
 [16-17年AB卷](2016_2017_AB_answers.html)
+
 [17-18年AB卷](2017_2018_AB_answers.html)
+
 [18-19年AB卷](2018_2019_AB_answers.html)
+
 [19-20年B卷](2019_2020_B_answers.html)
+
 [20-21年AB卷](2020_2021_AB_answers.html)
+
+## 五、大题整理（源自真题）
+**简单求和**
+```java
+//Write a program to find the sum of all integers from 1 to 100, and output the results.
+public class SumDemo {
+    public static void main(String[] args) {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            sum += i;
+        }
+        System.out.println("Sum from 1 to 100 = " + sum);
+    }
+}
+
+// Declare an array intArr, which include {1,2,3,4,5}, Please write a Java program to caculate the sum of the five elements, then output the result into console. 
+int[] intArr = {1, 2, 3, 4, 5};
+int sum = 0;
+for (int v : intArr) sum += v;
+System.out.println(sum);
+```
+**计算大写字母**
+```java
+// (Count uppercase letters) Write a program that prompts the user to enter a string and displays
+the number of the uppercase letters in the string.
+Scanner in = new Scanner(System.in);
+String s = in.nextLine();
+int count = 0;
+for (int i = 0; i < s.length(); i++) {
+    if (Character.isUpperCase(s.charAt(i))) count++;
+}
+System.out.println(count);
+```
+**数码频率**
+```java
+// Digit Frequency Counting: Counting the frequency of each digit occurrence in a single array by using “BufferedReader”
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+String line = br.readLine();
+int[] freq = new int[10];
+for (int i = 0; i < line.length(); i++) {
+    char ch = line.charAt(i);
+    if (Character.isDigit(ch)) freq[ch - '0']++;
+}
+for (int i = 0; i < freq.length; i++) {
+    System.out.println(i + ": " + freq[i]);
+}
+```
+**最大最小值**
+```java
+// Max/min of 10 integers
+Scanner input = new Scanner(System.in);
+int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+for (int i = 0; i < 10; i++) {
+    try {
+        int v = input.nextInt();
+        max = Math.max(max, v);
+        min = Math.min(min, v);
+    } catch (InputMismatchException ex) {
+        throw new IllegalArgumentException("input is not an integer");
+    }
+}
+System.out.println("Max=" + max);
+System.out.println("Min=" + min);
+```
+**字符串遍历、打印、删除、去重**
+```java
+import java.util.Iterator;
+import java.util.Vector;
+
+public class MainClass {
+    Vector vector = new Vector();
+    public MainClass() {
+        vector.add("country China");
+        vector.add("country America");
+        vector.add("country English");
+        vector.add("name Mary");
+        vector.add("name Linda");
+        vector.add("name Mike");
+        vector.add("name John");
+    }
+    // ① 遍历输出所有元素
+    public void printElements() {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+    // ② 删除以指定前缀开头的字符串（用 Iterator 避免 ConcurrentModificationException）
+    public void deleteStartsWith(String prefix) {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            if (str.startsWith(prefix)) {
+                it.remove();   // 安全删除
+            }
+        }
+    }
+    // ③ 打印以指定前缀开头的字符串
+    public void printStartsWith(String prefix) {
+        Iterator it = vector.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            if (str.startsWith(prefix)) {
+                System.out.println(str);
+            }
+        }
+    }
+}
+```
+**文件读入**
+```java
+//Write a class to read a given text file (java.txt) and output contents to console. Hint: BufferedReader, FileInputStream, InputStreamReader.
+import java.io.*;
+public class ReadFile {
+    public static void main(String[] args) {
+        try {
+            // 按题目提示：FileInputStream → InputStreamReader → BufferedReader
+            FileInputStream fis = new FileInputStream("java.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+**单例模式**
+```java
+// Complete the singleton pattern for StudentInfo (only one instance can be created). ① field ② constructor ③ getSingletonInstance(). (10 points)
+public class StudentInfo {
+    // ① 私有静态实例字段（延迟初始化）
+    private static StudentInfo instance = null;
+    private String name;
+    private String ID;
+    // ② 私有构造方法，防止外部 new
+    private StudentInfo() {
+        name = "";
+        ID = "";
+    }
+    // ③ 公有静态工厂方法，第一次调用时创建实例
+    static public StudentInfo getSingletonInstance() {
+        if (instance == null) {
+            instance = new StudentInfo();
+        }
+        return instance;
+    }
+    public String getName() { return name; }
+    public String getID()   { return ID; }
+}
+
+// There is a class named ImgResource, please applying singleton pattern to it, write the java code and draw the UML class diagram. 
+public class ImgResource {
+    private static final ImgResource INSTANCE = new ImgResource();
+    private ImgResource() {}
+    public static ImgResource getInstance() { return INSTANCE; }
+}
+```
+**UML图综合大题1**
+```java
+// UserDTO.java
+public class UserDTO {
+    private String userAccount;
+    private String userPassword;
+
+    public String getUserAccount()  { return userAccount; }
+    public void   setUserAccount(String acc) { this.userAccount = acc; }
+    public String getUserPassword() { return userPassword; }
+    public void   setUserPassword(String pwd) { this.userPassword = pwd; }
+}
+
+// IUserDAO.java（接口）
+public interface IUserDAO {
+    boolean addUser(UserDTO user);
+}
+
+// OracleUserDAO.java（实现类）
+public class OracleUserDAO implements IUserDAO {
+    public boolean addUser(UserDTO user) {
+        // Oracle specific implementation
+        return true;
+    }
+}
+
+// RegisterForm.java
+public class RegisterForm {
+    private IUserDAO userDAO;
+
+    public RegisterForm(IUserDAO dao) {
+        this.userDAO = dao;
+    }
+
+    public void register(String account, String password) {
+        UserDTO dto = new UserDTO();
+        dto.setUserAccount(account);
+        dto.setUserPassword(password);
+        userDAO.addUser(dto);
+    }
+}
+```
+**UML图综合大题2.1**
+```java
+// Use the UML class diagram (Person ← Student / Employee) to create Java classes. Person.display() prints name; Student.display() prints name+ID; Employee.display() prints name+salary; hasSameName(Person) compares names; isEqual(Student) uses hasSameName and also compares ID. 
+// Person.java
+public class Person {
+    private String name;
+
+    public Person() { this.name = ""; }
+    public Person(String name) { this.name = name; }
+
+    public void   setName(String name) { this.name = name; }
+    public String getName() { return name; }
+
+    public void display() {
+        System.out.println("Name: " + name);
+    }
+
+    public boolean hasSameName(Person p) {
+        return this.name.equals(p.getName());
+    }
+}
+
+// Student.java
+public class Student extends Person {
+    private int studentID;
+
+    public Student() { super(); }
+    public Student(String name, int id) { super(name); this.studentID = id; }
+
+    public void  setID(int id) { this.studentID = id; }
+    public int   getID() { return studentID; }
+
+    @Override
+    public void display() {
+        System.out.println("Name: " + getName() + ", ID: " + studentID);
+    }
+
+    public boolean isEqual(Student s) {
+        return hasSameName(s) && this.studentID == s.getID();
+    }
+}
+
+// Employee.java
+public class Employee extends Person {
+    private double salary;
+
+    public Employee(String name, double salary) {
+        super(name);
+        this.salary = salary;
+    }
+
+    public void   setSalary(double salary) { this.salary = salary; }
+    public double getSalary() { return salary; }
+
+    @Override
+    public void display() {
+        System.out.println("Name: " + getName() + ", Salary: " + salary);
+    }
+}
+```
+**UML图综合大题2.2**
+```java
+import java.io.*;
+import java.util.*;
+
+public class MainProgram {
+
+    public static void main(String[] args) throws IOException {
+        List<Student>  students  = new ArrayList<>();
+        List<Employee> employees = new ArrayList<>();
+
+        // ─── (A) 读取 students.txt ───────────────────────────────────
+        BufferedReader br = new BufferedReader(new FileReader("students.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] p = line.trim().split("\\s+");
+            if (p.length >= 2)
+                students.add(new Student(p[0], Integer.parseInt(p[1])));
+        }
+        br.close();
+
+        // 读取 employees.txt
+        br = new BufferedReader(new FileReader("employees.txt"));
+        while ((line = br.readLine()) != null) {
+            String[] p = line.trim().split("\\s+");
+            if (p.length >= 2)
+                employees.add(new Employee(p[0], Double.parseDouble(p[1])));
+        }
+        br.close();
+
+        // ─── (B) 查找重复学生记录（name 和 ID 均相同）─────────────────
+        System.out.println("=== Duplicate Students ===");
+        boolean found = false;
+        for (int i = 0; i < students.size(); i++) {
+            for (int j = i + 1; j < students.size(); j++) {
+                if (students.get(i).isEqual(students.get(j))) {
+                    System.out.print("Duplicate: ");
+                    students.get(i).display();
+                    found = true;
+                }
+            }
+        }
+        if (!found) System.out.println("No exact duplicates found.");
+
+        // ─── (C) 查找同名的学生和员工 ─────────────────────────────────
+        System.out.println("\n=== Students & Employees with Same Name ===");
+        for (Student  s : students) {
+            for (Employee e : employees) {
+                if (s.hasSameName(e)) {
+                    System.out.println("Match found:");
+                    s.display(); e.display();
+                }
+            }
+        }
+        // 预期输出: Shirley（学生 751）和 Shirley（员工 7500）同名
+
+        // ─── (D) 薪资最高的 3 名员工 ──────────────────────────────────
+        System.out.println("\n=== Top 3 Employees by Salary ===");
+        employees.sort((a, b) -> Double.compare(b.getSalary(), a.getSalary()));
+        for (int i = 0; i < Math.min(3, employees.size()); i++) {
+            employees.get(i).display();
+        }
+        // 预期: Alex(15000), Steven(12800), Vivian(12300)
+    }
+}
+```
