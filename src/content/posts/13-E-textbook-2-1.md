@@ -25,3 +25,5 @@ draft: false
 [离散数学.pdf](https://lfs.cacode.qzz.io/file/1784168140388_离散数学.pdf)
 
 [马克思主义基本原理(2023版).pdf](https://lfs.cacode.qzz.io/file/1784169717591_马克思主义基本原理_2023版_.pdf)
+
+[概率统计理工习题册.pdf](https://lfs.cacode.qzz.io/file/1785152457598_概率统计理工习题册.pdf)
