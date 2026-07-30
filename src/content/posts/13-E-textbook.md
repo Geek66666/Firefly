@@ -9,6 +9,7 @@ draft: false
 ---
 
 # 大一上
+
 [大学数学习题册（第三版）.pdf](https://lfs.cacode.qzz.io/file/1785153002075_大学数学习题册（第三版）.pdf)
 
 [全新版大学高阶英语综合教程1.pdf](https://lfs.cacode.qzz.io/file/1785153250903_全新版大学高阶英语综合教程1.pdf)
@@ -72,4 +73,6 @@ draft: false
 
 [马克思主义基本原理(2023版).pdf](https://lfs.cacode.qzz.io/file/1784169717591_马克思主义基本原理_2023版_.pdf)
 
-[概率统计理工习题册.pdf](https://lfs.cacode.qzz.io/file/1785152457598_概率统计理工习题册.pdf)
+[概率统计习题册（理、工科类）（第三版）.pdf](https://lfs.cacode.qzz.io/file/1785422513604_概率统计习题册（理、工科类）（第三版）.pdf)
+
+[《马克思主义基本原理》学习指导.pdf](https://lfs.cacode.qzz.io/file/1785422510428_《马克思主义基本原理》学习指导.pdf)
