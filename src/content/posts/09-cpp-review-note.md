@@ -5,7 +5,7 @@ description: 2026年蓝桥杯紧急复习笔记，太忙了，没时间复习，
 image: ./covers/cover9.webp
 tags: [蓝桥杯, C++, 复习笔记]
 category: 复习笔记
-draft: false
+draft: true
 ---
 
 # 蓝桥杯复习笔记
