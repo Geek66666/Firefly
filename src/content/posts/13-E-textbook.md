@@ -1,6 +1,6 @@
 ---
 title: 软件工程电子课本收集（持续更新）
-published: 2026-07-16
+published: 2026-08-04
 description: 由网上公开渠道获取到的电子课本，请大家理性使用
 image: ./covers/cover13.webp
 tags: [资源分享, 电子课本, 软件工程]
