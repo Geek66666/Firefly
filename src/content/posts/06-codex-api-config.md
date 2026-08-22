@@ -5,7 +5,7 @@ description: Codex的配置教程
 image: ./covers/cover6.webp
 tags: [软件开发, 人工智能, Codex]
 category: 软件开发
-draft: true
+draft: false
 ---
 
 ## 配置过程
